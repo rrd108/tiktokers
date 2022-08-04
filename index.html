@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Magyar Tiktokers</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap"
+      rel="stylesheet"
+    />
+    <script src="app.js" defer></script>
+  </head>
+
+  <body>
+    <div>
+      <table>
+        <thead id="thead">
+          <tr>
+            <td></td>
+            <td>Tiktoker</td>
+            <td><button id="orderBy_followerCount">↕</button> Followers</td>
+            <td><button id="orderBy_videoCount">↕</button>Videos</td>
+            <td><button id="orderBy_heartCount">↕</button>Hearts</td>
+            <td>
+              <button id="orderBy_followerPerVideo">↕</button>Followers / Videos
+            </td>
+            <td>
+              <button id="orderBy_heartPerVideo">↕</button>Hearts / Videos
+            </td>
+            <td>
+              <button id="orderBy_heartPerFollower">↕</button>Hearts / Followers
+            </td>
+            <td><button id="orderBy_views">↕</button>10 Views</td>
+            <td><button id="orderBy_videoStats">↕</button>Engagement</td>
+          </tr>
+        </thead>
+        <tbody id="stats"></tbody>
+      </table>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,54 @@
+body {
+  font-family: 'Quicksand', sans-serif;
+}
+div {
+  margin-bottom: 4rem;
+}
+
+.r {
+  text-align: right;
+}
+
+thead {
+  background-color: #4f81bc;
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
+  position: sticky;
+  top: 0;
+}
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+td {
+  padding: 0.2em 1em;
+  width: 7em;
+}
+td:nth-child(1) {
+  width: auto;
+}
+
+.min {
+  background-color: #f00;
+  color: #fff;
+  font-weight: bold;
+}
+.max {
+  background-color: #080;
+  color: #fff;
+  font-weight: bold;
+}
+small {
+  font-size: 0.8rem;
+  display: block;
+  display: flex;
+  justify-content: space-between;
+}
+.b {
+  font-size: 1.5rem;
+}
+
+.num {
+  cursor: pointer;
+}
