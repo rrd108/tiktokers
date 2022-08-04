@@ -22,34 +22,6 @@ thead.addEventListener('click', e => {
   }
 })
 
-const getMarks = (num, min, max) =>
-  num == max ? 'max' : num == min ? 'min' : ''
-
-const getMin = (tiktokers, prop) =>
-  Math.min(...tiktokers.map(tiktoker => tiktoker[prop]))
-const getMax = (tiktokers, prop) =>
-  Math.max(...tiktokers.map(tiktoker => tiktoker[prop]))
-
-const calculateMinMax = () => {
-  min.followers = getMin(tiktokers, 'followerCount')
-  min.videos = getMin(tiktokers, 'videoCount')
-  min.hearts = getMin(tiktokers, 'heartCount')
-  min.views = getMin(tiktokers, 'views')
-  min.followerPerVideo = getMin(tiktokers, 'followerPerVideo')
-  min.heartPerVideo = getMin(tiktokers, 'heartPerVideo')
-  min.heartPerFollower = getMin(tiktokers, 'heartPerFollower')
-  min.videoStats = getMin(tiktokers, 'videoStats')
-
-  max.followers = getMax(tiktokers, 'followerCount')
-  max.videos = getMax(tiktokers, 'videoCount')
-  max.hearts = getMax(tiktokers, 'heartCount')
-  max.views = getMax(tiktokers, 'views')
-  max.followerPerVideo = getMax(tiktokers, 'followerPerVideo')
-  max.heartPerVideo = getMax(tiktokers, 'heartPerVideo')
-  max.heartPerFollower = getMax(tiktokers, 'heartPerFollower')
-  max.videoStats = getMax(tiktokers, 'videoStats')
-}
-
 stats.addEventListener('click', e => {
   if (e.target.className.substr(0, 3) == 'num') {
     const tiktoker = e.target.className.substr(4)
@@ -58,9 +30,36 @@ stats.addEventListener('click', e => {
   }
 })
 
+const getMarkers = (prop, name) => {
+  let max = tiktokersBy[prop].findIndex(t => t.tiktoker == name) + 1
+  max = max <= 3 ? `max_${max}` : ''
+
+  let min =
+    [...tiktokersBy[prop]].reverse().findIndex(t => t.tiktoker == name) + 1
+  min = min <= 3 ? `min_${min}` : ''
+
+  return `${max} ${min}`
+}
+
+const tiktokersBy = {}
 const generateTable = () => {
   statsBody.innerHTML = ''
-  calculateMinMax()
+  //calculateMinMax()
+
+  const columns = [
+    'followerCount',
+    'videoCount',
+    'heartCount',
+    'views',
+    'followerPerVideo',
+    'heartPerVideo',
+    'heartPerFollower',
+    'videoStats',
+  ]
+
+  columns.forEach(column => {
+    tiktokersBy[column] = [...tiktokers].sort((a, b) => b[column] - a[column])
+  })
 
   tiktokers.forEach((tiktoker, i) => {
     statsBody.innerHTML += `<tr>
@@ -72,99 +71,97 @@ const generateTable = () => {
       </a>
     </td>
 
-    <td class="r ${getMarks(
-      tiktoker.followerCount,
-      min.followers,
-      max.followers
-    )}">
+    <td class="r ${getMarkers('followerCount', tiktoker.tiktoker)}">
       ${Intl.NumberFormat().format(tiktoker.followerCount)}
     </td>
 
-    <td class="r ${getMarks(tiktoker.videoCount, min.videos, max.videos)}">
+    <td class="r ${getMarkers('videoCount', tiktoker.tiktoker)}">
       ${Intl.NumberFormat().format(tiktoker.videoCount)}
     </td>
 
-    <td class="r ${getMarks(tiktoker.heartCount, min.hearts, max.hearts)}">
+    <td class="r ${getMarkers('heartCount', tiktoker.tiktoker)}">
       ${Intl.NumberFormat().format(tiktoker.heartCount)}
     </td>
 
-    <td class="b r ${getMarks(
-      tiktoker.followerPerVideo,
-      min.followerPerVideo,
-      max.followerPerVideo
-    )}">
+    <td class="b r ${getMarkers('followerPerVideo', tiktoker.tiktoker)}">
       ${Intl.NumberFormat().format(tiktoker.followerPerVideo.toFixed(0))}
       <small>
         <span>
            ▴ ${Intl.NumberFormat().format(
-             ((tiktoker.followerPerVideo / min.followerPerVideo) * 100).toFixed(
-               0
-             )
-           )} %
+             (
+               tiktoker.followerPerVideo /
+               tiktokersBy.followerPerVideo[
+                 tiktokersBy.followerPerVideo.length - 1
+               ].followerPerVideo
+             ).toFixed(0)
+           )}x
         </span>
         <span>
            ▴ ${Intl.NumberFormat().format(
-             ((tiktoker.followerPerVideo / max.followerPerVideo) * 100).toFixed(
-               0
-             )
+             (
+               (tiktoker.followerPerVideo /
+                 tiktokersBy.followerPerVideo[0].followerPerVideo) *
+               100
+             ).toFixed(0)
            )} %
         </span>
       </small>
     </td>
 
-    <td class="b r ${getMarks(
-      tiktoker.heartPerVideo,
-      min.heartPerVideo,
-      max.heartPerVideo
-    )}">
+    <td class="b r ${getMarkers('heartPerVideo', tiktoker.tiktoker)}">
       ${Intl.NumberFormat().format(tiktoker.heartPerVideo.toFixed(0))}
       <small>
         <span>
-           ▴ ${Intl.NumberFormat().format(
-             ((tiktoker.heartPerVideo / min.heartPerVideo) * 100).toFixed(0)
-           )} %
-        </span>
-        <span>
-           ▴ ${Intl.NumberFormat().format(
-             ((tiktoker.heartPerVideo / max.heartPerVideo) * 100).toFixed(0)
-           )} %
-        </span>
-      </small>
-    </td>
+        ▴ ${Intl.NumberFormat().format(
+          (
+            tiktoker.heartPerVideo /
+            tiktokersBy.heartPerVideo[tiktokersBy.heartPerVideo.length - 1]
+              .heartPerVideo
+          ).toFixed(0)
+        )}x
+      </span>
+      <span>
+          ▴ ${Intl.NumberFormat().format(
+            (
+              (tiktoker.heartPerVideo /
+                tiktokersBy.heartPerVideo[0].heartPerVideo) *
+              100
+            ).toFixed(0)
+          )} %
+      </span>
+    </small>
+  </td>
 
-    <td class="b r ${getMarks(
-      tiktoker.heartPerFollower,
-      min.heartPerFollower,
-      max.heartPerFollower
-    )}">
+    <td class="b r ${getMarkers('heartPerFollower', tiktoker.tiktoker)}">
       ${Intl.NumberFormat().format(tiktoker.heartPerFollower.toFixed(0))}
       <small>
         <span>
-           ▴ ${Intl.NumberFormat().format(
-             ((tiktoker.heartPerFollower / min.heartPerFollower) * 100).toFixed(
-               0
-             )
-           )} %
-        </span>
-        <span>
-           ▴ ${Intl.NumberFormat().format(
-             ((tiktoker.heartPerFollower / max.heartPerFollower) * 100).toFixed(
-               0
-             )
-           )} %
-        </span>
-      </small>
+        ▴ ${Intl.NumberFormat().format(
+          (
+            tiktoker.heartPerFollower /
+            tiktokersBy.heartPerFollower[
+              tiktokersBy.heartPerFollower.length - 1
+            ].heartPerFollower
+          ).toFixed(0)
+        )}x
+      </span>
+      <span>
+          ▴ ${Intl.NumberFormat().format(
+            (
+              (tiktoker.heartPerFollower /
+                tiktokersBy.heartPerFollower[0].heartPerFollower) *
+              100
+            ).toFixed(0)
+          )} %
+      </span>
+    </small>
     </td>
 
-    <td class="r ${getMarks(tiktoker.views, min.views, max.views)}">
+    <td class="r ${getMarkers('views', tiktoker.tiktoker)}">
       ${Intl.NumberFormat().format(tiktoker.views)}
     </td>
 
-    <td class="r ${getMarks(
-      tiktoker.videoStats,
-      min.videoStats,
-      max.videoStats
-    )}">
+    <td class="r ${getMarkers('videoStats', tiktoker.tiktoker)}">
       ${Intl.NumberFormat().format((tiktoker.videoStats * 100).toFixed(2))}%
     </td>
   </tr>`
@@ -174,24 +171,25 @@ const generateTable = () => {
 fetch('http://localhost/~rrd/tiktokers/api.php')
   .then(response => response.json())
   .then(data => {
-    tiktokers = data.map(tiktoker => ({
-      ...tiktoker,
-      followerPerVideo: tiktoker.followerCount / tiktoker.videoCount,
-      heartPerVideo: tiktoker.heartCount / tiktoker.videoCount,
-      heartPerFollower: tiktoker.heartCount / tiktoker.followerCount,
-      views: tiktoker.videoStats
-        .map(stats => JSON.parse(stats))
-        .reduce((acc, cur) => acc + cur.playCount, 0),
-      videoStats:
-        tiktoker.videoStats
+    tiktokers = data
+      .map(tiktoker => ({
+        ...tiktoker,
+        followerPerVideo: tiktoker.followerCount / tiktoker.videoCount,
+        heartPerVideo: tiktoker.heartCount / tiktoker.videoCount,
+        heartPerFollower: tiktoker.heartCount / tiktoker.followerCount,
+        views: tiktoker.videoStats
           .map(stats => JSON.parse(stats))
-          .map(
-            stat =>
-              (stat.commentCount + stat.diggCount + stat.shareCount) /
-              stat.playCount
-          )
-          .reduce((acc, cur) => acc + cur, 0) / tiktoker.videoStats.length,
-    }))
-
+          .reduce((acc, cur) => acc + cur.playCount, 0),
+        videoStats:
+          tiktoker.videoStats
+            .map(stats => JSON.parse(stats))
+            .map(
+              stat =>
+                (stat.commentCount + stat.diggCount + stat.shareCount) /
+                stat.playCount
+            )
+            .reduce((acc, cur) => acc + cur, 0) / tiktoker.videoStats.length,
+      }))
+      .sort((a, b) => (a.tiktoker < b.tiktoker ? -1 : 1))
     generateTable()
   })

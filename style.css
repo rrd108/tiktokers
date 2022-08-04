@@ -22,22 +22,43 @@ tr:nth-child(even) {
 }
 
 td {
-  padding: 0.2em 1em;
+  padding: 0.2em 0.5em;
   width: 7em;
 }
 td:nth-child(1) {
   width: auto;
 }
 
-.min {
-  background-color: #f00;
+.min_1,
+.min_2,
+.min_3 {
   color: #fff;
   font-weight: bold;
 }
-.max {
-  background-color: #080;
+.min_1 {
+  background-color: #800;
+}
+.min_2 {
+  background-color: #b00;
+}
+.min_3 {
+  background-color: #f00;
+}
+
+.max_1,
+.max_2,
+.max_3 {
   color: #fff;
   font-weight: bold;
+}
+.max_1 {
+  background-color: #060;
+}
+.max_2 {
+  background-color: #080;
+}
+.max_3 {
+  background-color: #0a0;
 }
 small {
   font-size: 0.8rem;
