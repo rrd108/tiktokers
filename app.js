@@ -1,3 +1,4 @@
+/* analytics */
 let tiktokers = []
 const min = {}
 const max = {}
@@ -168,7 +169,7 @@ const generateTable = () => {
   })
 }
 
-fetch('http://localhost/~rrd/tiktokers/api.php')
+fetch('http://localhost/~rrd/tiktokers/api.php?data=analytics')
   .then(response => response.json())
   .then(data => {
     tiktokers = data
@@ -192,4 +193,99 @@ fetch('http://localhost/~rrd/tiktokers/api.php')
       }))
       .sort((a, b) => (a.tiktoker < b.tiktoker ? -1 : 1))
     generateTable()
+  })
+
+/* pager */
+const menuItems = document.querySelectorAll('li')
+const pages = document.querySelectorAll('section')
+
+menuItems.forEach(item => {
+  item.addEventListener('click', e => {
+    pages.forEach(page => {
+      page.classList.remove('active')
+      if (page.id === e.target.dataset.id) {
+        page.classList.add('active')
+      }
+    })
+  })
+})
+
+/* followers */
+fetch('http://localhost/~rrd/tiktokers/api.php?data=followers')
+  .then(response => response.json())
+  .then(data => {
+    const tiktokers = Object.keys(data)
+
+    followerData = tiktokers.map(tiktoker => ({
+      type: 'spline',
+      axisYType: 'secondary',
+      name: tiktoker,
+      showInLegend: true,
+      markerSize: 0,
+      dataPoints: data[tiktoker].map(d => ({
+        x: new Date(d.date),
+        y: d.followerCount,
+      })),
+    }))
+
+    const followerChart = new CanvasJS.Chart('followerChartContainer', {
+      animationEnabled: true,
+      title: {
+        text: 'Magyar Tiktokers követők száma',
+      },
+      legend: {
+        fontSize: 12,
+        cursor: 'pointer',
+        verticalAlign: 'center',
+        horizontalAlign: 'left',
+        dockInsidePlotArea: true,
+      },
+      toolTip: {
+        shared: true,
+      },
+      data: followerData,
+    })
+
+    //console.log(chart);
+    followerChart.render()
+  })
+
+/* likes */
+fetch('http://localhost/~rrd/tiktokers/api.php?data=likes')
+  .then(response => response.json())
+  .then(data => {
+    const tiktokers = Object.keys(data)
+
+    likeData = tiktokers.map(tiktoker => ({
+      type: 'spline',
+      axisYType: 'secondary',
+      name: tiktoker,
+      showInLegend: true,
+      markerSize: 0,
+      dataPoints: data[tiktoker].map(d => ({
+        x: new Date(d.date),
+        y: d.heartCount,
+      })),
+    }))
+
+    const likeChart = new CanvasJS.Chart('likeChartContainer', {
+      animationEnabled: true,
+      title: {
+        text: 'Magyar Tiktokers likeok száma',
+      },
+      legend: {
+        fontSize: 12,
+        cursor: 'pointer',
+        verticalAlign: 'center',
+        horizontalAlign: 'left',
+        dockInsidePlotArea: true,
+      },
+      toolTip: {
+        shared: true,
+      },
+      data: likeData,
+    })
+
+    //console.log(chart);
+    likeChart.render()
   })

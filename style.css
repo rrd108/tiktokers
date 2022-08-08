@@ -73,3 +73,22 @@ small {
 .num {
   cursor: pointer;
 }
+
+ul {
+  display: flex;
+  list-style: none;
+}
+li {
+  cursor: pointer;
+  margin: 0 0.5em;
+  border-bottom: 0.1em solid #fff;
+}
+li:hover {
+  border-bottom: 0.1em solid #060;
+}
+section {
+  display: none;
+}
+section.active {
+  display: block;
+}

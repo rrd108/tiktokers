@@ -12,11 +12,26 @@
       href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap"
       rel="stylesheet"
     />
+    <script
+      src="https://canvasjs.com/assets/script/canvasjs.min.js"
+      defer
+    ></script>
     <script src="app.js" defer></script>
   </head>
 
   <body>
-    <div>
+    <ul>
+      <li data-id="analysis">Elemző</li>
+      <li data-id="followers">Követők</li>
+      <li data-id="likes">Likes</li>
+    </ul>
+    <section id="followers" class="active">
+      <div id="followerChartContainer" style="height: 670px; width: 100%"></div>
+    </section>
+    <section id="likes">
+      <div id="likeChartContainer" style="height: 670px; width: 100%"></div>
+    </section>
+    <section id="analysis">
       <table>
         <thead id="thead">
           <tr>
@@ -40,6 +55,6 @@
         </thead>
         <tbody id="stats"></tbody>
       </table>
-    </div>
+    </section>
   </body>
 </html>
