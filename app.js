@@ -55,6 +55,7 @@ const generateTable = () => {
     'followerPerVideo',
     'heartPerVideo',
     'heartPerFollower',
+    'viewPerFollower',
     'videoStats',
   ]
 
@@ -162,6 +163,10 @@ const generateTable = () => {
       ${Intl.NumberFormat().format(tiktoker.views)}
     </td>
 
+    <td class="r ${getMarkers('viewPerFollower', tiktoker.tiktoker)}">
+      ${Intl.NumberFormat().format(tiktoker.viewPerFollower.toFixed(2))}x
+    </td>
+
     <td class="r ${getMarkers('videoStats', tiktoker.tiktoker)}">
       ${Intl.NumberFormat().format((tiktoker.videoStats * 100).toFixed(2))}%
     </td>
@@ -181,6 +186,13 @@ fetch('http://localhost/~rrd/tiktokers/api.php?data=analytics')
         views: tiktoker.videoStats
           .map(stats => JSON.parse(stats))
           .reduce((acc, cur) => acc + cur.playCount, 0),
+        viewPerFollower:
+          tiktoker.videoStats
+            .map(stats => JSON.parse(stats))
+            .reduce(
+              (acc, cur) => acc + cur.playCount / tiktoker.followerCount,
+              0
+            ) / tiktoker.videoStats.length,
         videoStats:
           tiktoker.videoStats
             .map(stats => JSON.parse(stats))
